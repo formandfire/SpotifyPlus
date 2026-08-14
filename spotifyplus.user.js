@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         SpotifyPlus Mobile Skin
 // @namespace    https://github.com/sstevestanislavski/SpotifyPlus
-// @version      1.4.4
-// @description  Stable mobile skin with app-like SP+ Library, self-healing navigation, full-height panel, and Library-only active-state override.
+// @version      1.4.5
+// @description  Stable mobile skin with app-like SP+ Library, self-healing navigation, full-height panel, and corrected bottom-nav active states.
 // @match        https://open.spotify.com/*
 // @run-at       document-idle
 // @grant        none
@@ -11,7 +11,7 @@
 // ==/UserScript==
 (() => {
 'use strict';
-const VERSION='1.4.4',ROOT='spotifyplus-mobile',STYLE='spotifyplus-style';
+const VERSION='1.4.5',ROOT='spotifyplus-mobile',STYLE='spotifyplus-style';
 const LIBKEY='spotifyplus-library-v1',PANEL='spotifyplus-library';
 const css=`
 html.${ROOT}{--sp-row:62px;--sp-radius:12px}
@@ -38,6 +38,7 @@ html.${ROOT} [data-testid="control-button-playpause"]{width:64px!important;heigh
 html.${ROOT} [data-spplus-status-nav="1"],html.${ROOT} [data-spplus-status-nav="1"] *{color:#1ed760!important;fill:#1ed760!important;stroke:#1ed760!important}
 html.${ROOT} [data-spplus-status-nav="1"]{font-weight:800!important}
 html.${ROOT} [data-spplus-nav-active="1"],html.${ROOT} [data-spplus-nav-active="1"] *{color:#fff!important;fill:#fff!important;stroke:#fff!important;opacity:1!important}
+html.${ROOT} [data-spplus-nav-inactive="1"],html.${ROOT} [data-spplus-nav-inactive="1"] *{color:#b3b3b3!important;fill:#b3b3b3!important;stroke:#b3b3b3!important;opacity:1!important}
 #${PANEL}{position:fixed;left:0;right:0;top:0;bottom:120px;z-index:2147483500;background:#101010;color:#fff;font-family:system-ui,-apple-system,Segoe UI,sans-serif;display:none;overflow:auto;overscroll-behavior:contain}
 #${PANEL}.open{display:block}
 #${PANEL} .spl-wrap{max-width:720px;margin:auto;padding:18px 16px 28px}
@@ -76,7 +77,7 @@ let filter='all',query='';
 function ensureLibrary(){if(document.getElementById(PANEL)||!document.body)return;const el=document.createElement('div');el.id=PANEL;el.innerHTML=`<div class="spl-wrap"><div class="spl-head"><div class="spl-avatar">SP</div><h1>Your Library</h1><button class="spl-iconbtn" id="spl-search-btn" aria-label="Search library">⌕</button><button class="spl-iconbtn" id="spl-add-btn" aria-label="Add to library">＋</button><button class="spl-manage" id="spl-manage">Manage</button></div><div class="spl-search" id="spl-search"><input id="spl-search-input" placeholder="Search your SP+ Library"></div><div class="spl-chips" id="spl-chips"></div><div class="spl-sort"><span>↕</span><span>Recents</span></div><div class="spl-list" id="spl-list"></div><div class="spl-note">SP+ Library is saved locally in this browser. It does not sync with Spotify's account library.</div></div>`;document.body.appendChild(el);el.querySelector('#spl-search-btn').onclick=()=>{const box=el.querySelector('#spl-search');box.classList.toggle('open');if(box.classList.contains('open'))el.querySelector('#spl-search-input').focus()};el.querySelector('#spl-search-input').oninput=e=>{query=e.target.value.toLowerCase();renderLibrary()};el.querySelector('#spl-add-btn').onclick=()=>{const current=parseSpotify(location.href);const suggestion=current?location.href:'';const raw=prompt('Paste a Spotify link, or leave the current Spotify page URL:',suggestion);if(raw===null)return;if(!saveLink(raw,raw===location.href?cleanTitle():'Saved Spotify item'))alert('Open or paste a valid Spotify playlist, artist, album, track, show, or episode link.');};el.querySelector('#spl-manage').onclick=()=>{if(!readLib().length)return;if(confirm('Manage SP+ Library: remove all saved items?')){writeLib([]);renderLibrary()}};renderLibrary()}
 function renderLibrary(){const root=document.getElementById(PANEL);if(!root)return;const types=['all','playlist','album','artist','track'];root.querySelector('#spl-chips').innerHTML=types.map(t=>`<button data-f="${t}" class="${filter===t?'active':''}">${t==='all'?'All':t[0].toUpperCase()+t.slice(1)+'s'}</button>`).join('');root.querySelectorAll('#spl-chips button').forEach(b=>b.onclick=()=>{filter=b.dataset.f;renderLibrary()});let lib=readLib();if(filter!=='all')lib=lib.filter(x=>x.type===filter);if(query)lib=lib.filter(x=>(x.title||'').toLowerCase().includes(query));const list=root.querySelector('#spl-list');if(!lib.length){list.innerHTML='<div class="spl-empty">Nothing saved here yet.<br><br>Tap <b>＋</b> to add the current Spotify page or paste a Spotify link.</div>';return}list.innerHTML=lib.map(x=>`<div class="spl-item"><div class="spl-art ${x.type}">${x.type==='playlist'?'♫':x.type==='artist'?'●':x.type==='album'?'◉':'♪'}</div><div class="spl-open"><div class="spl-title"></div><div class="spl-meta">${x.type} • Saved in SP+</div></div><button class="spl-more" aria-label="More">⋮</button></div>`).join('');[...list.querySelectorAll('.spl-item')].forEach((row,i)=>{const x=lib[i];row.querySelector('.spl-title').textContent=x.title;row.querySelector('.spl-open').onclick=()=>{closeLibrary();location.href=x.url};row.querySelector('.spl-more').onclick=()=>{if(confirm(`Remove “${x.title}” from SP+ Library?`)){writeLib(readLib().filter(y=>y.url!==x.url));renderLibrary()}}})}
 function findNavs(label){const re=new RegExp(`^${label}$`,'i');return [...document.querySelectorAll('a,button,[role="button"]')].filter(el=>{const txt=(el.textContent||'').trim(),aria=(el.getAttribute('aria-label')||'').trim();return re.test(txt)||re.test(aria)})}
-function syncNavState(){const open=document.getElementById(PANEL)?.classList.contains('open');const libraries=findNavs('your library');for(const el of [...document.querySelectorAll('[data-spplus-nav-active]')])delete el.dataset.spplusNavActive;if(open){for(const el of libraries)el.dataset.spplusNavActive='1'}}
+function syncNavState(){const open=document.getElementById(PANEL)?.classList.contains('open');const homes=findNavs('home'),searches=findNavs('search'),libraries=findNavs('your library');for(const el of [...document.querySelectorAll('[data-spplus-nav-active],[data-spplus-nav-inactive]')]){delete el.dataset.spplusNavActive;delete el.dataset.spplusNavInactive}if(open){for(const el of homes)el.dataset.spplusNavInactive='1';for(const el of searches)el.dataset.spplusNavInactive='1';for(const el of libraries)el.dataset.spplusNavActive='1'}}
 function openLibrary(){ensureLibrary();document.getElementById(PANEL).classList.add('open');renderLibrary();syncNavState()}
 function closeLibrary(){document.getElementById(PANEL)?.classList.remove('open');syncNavState()}
 function dismissLibraryPrompt(){const els=[...document.querySelectorAll('button,[role="button"]')],notNow=els.find(e=>/^not now$/i.test((e.textContent||'').trim()));if(!notNow)return;const box=notNow.closest('[role="dialog"]')||notNow.parentElement?.parentElement,text=(box?.textContent||'').toLowerCase();if(text.includes('get app')&&(text.includes('library')||text.includes('spotify app')))notNow.click()}
