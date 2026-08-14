@@ -1,13 +1,13 @@
 // ==UserScript==
 // @name         SpotifyPlus Mobile Skin
-// @namespace    https://github.com/sstevestanislavski/SpotifyPlus
+// @namespace    https://github.com/formandfire/SpotifyPlus
 // @version      1.4.7
 // @description  Stable mobile skin with app-like SP+ Library, self-healing navigation, full-height panel, corrected bottom-nav active states, and clean playlist titles.
 // @match        https://open.spotify.com/*
 // @run-at       document-idle
 // @grant        none
-// @updateURL    https://sstevestanislavski.github.io/SpotifyPlus/spotifyplus.user.js
-// @downloadURL  https://sstevestanislavski.github.io/SpotifyPlus/spotifyplus.user.js
+// @updateURL    https://formandfire.github.io/SpotifyPlus/spotifyplus.user.js
+// @downloadURL  https://formandfire.github.io/SpotifyPlus/spotifyplus.user.js
 // ==/UserScript==
 (() => {
 'use strict';
