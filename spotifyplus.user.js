@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         SpotifyPlus Mobile Skin
 // @namespace    https://github.com/sstevestanislavski/SpotifyPlus
-// @version      1.4.1
-// @description  Stable mobile skin with app-like SP+ Library, self-healing navigation, and Library active-state sync.
+// @version      1.4.2
+// @description  Stable mobile skin with app-like SP+ Library, self-healing navigation, active-state sync, and full-height Library panel.
 // @match        https://open.spotify.com/*
 // @run-at       document-idle
 // @grant        none
@@ -11,7 +11,7 @@
 // ==/UserScript==
 (() => {
 'use strict';
-const VERSION='1.4.1',ROOT='spotifyplus-mobile',STYLE='spotifyplus-style';
+const VERSION='1.4.2',ROOT='spotifyplus-mobile',STYLE='spotifyplus-style';
 const LIBKEY='spotifyplus-library-v1',PANEL='spotifyplus-library';
 const css=`
 html.${ROOT}{--sp-row:62px;--sp-radius:12px}
@@ -39,7 +39,7 @@ html.${ROOT} [data-spplus-status-nav="1"],html.${ROOT} [data-spplus-status-nav="
 html.${ROOT} [data-spplus-status-nav="1"]{font-weight:800!important}
 html.${ROOT} [data-spplus-nav-active="1"],html.${ROOT} [data-spplus-nav-active="1"] *{color:#fff!important;fill:#fff!important;opacity:1!important}
 html.${ROOT} [data-spplus-nav-muted="1"],html.${ROOT} [data-spplus-nav-muted="1"] *{color:#8f8f8f!important;fill:#8f8f8f!important;opacity:.78!important}
-#${PANEL}{position:fixed;left:0;right:0;top:0;bottom:150px;z-index:2147483500;background:#101010;color:#fff;font-family:system-ui,-apple-system,Segoe UI,sans-serif;display:none;overflow:auto;overscroll-behavior:contain}
+#${PANEL}{position:fixed;left:0;right:0;top:0;bottom:120px;z-index:2147483500;background:#101010;color:#fff;font-family:system-ui,-apple-system,Segoe UI,sans-serif;display:none;overflow:auto;overscroll-behavior:contain}
 #${PANEL}.open{display:block}
 #${PANEL} .spl-wrap{max-width:720px;margin:auto;padding:18px 16px 28px}
 #${PANEL} .spl-head{display:flex;align-items:center;gap:12px;padding:8px 0 16px;position:sticky;top:0;background:#101010;z-index:3}
