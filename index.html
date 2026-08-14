@@ -3,42 +3,43 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Spotify Mobile V1.2</title>
+<title>SpotifyPlus</title>
 <style>
-:root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;color-scheme:dark}
-*{box-sizing:border-box}
-body{margin:0;background:#0b0b0b;color:#fff;min-height:100vh}
-main{max-width:720px;margin:auto;padding:18px 16px 40px}
-h1{font-size:26px;margin:4px 0 5px}.sub{color:#aaa;margin:0 0 18px;line-height:1.35}
-.card{background:#171717;border:1px solid #2a2a2a;border-radius:20px;padding:14px;margin:12px 0}
-label{font-size:13px;color:#bbb}.row{display:flex;gap:8px;margin-top:7px}
-input{min-width:0;flex:1;background:#242424;color:#fff;border:1px solid #3a3a3a;border-radius:13px;padding:14px;font-size:16px}
-button{border:0;border-radius:13px;padding:14px 16px;font-size:16px;font-weight:700;background:#fff;color:#111}button:active{transform:scale(.98)}
-.note{font-size:14px;color:#bbb;line-height:1.4;margin:10px 2px 0}#player{margin-top:12px}
-iframe{display:block;width:100%;border:0;border-radius:18px;min-height:352px}.quick{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px}
-.quick button{background:#252525;color:#fff;border:1px solid #363636;min-height:58px}.status{font-size:13px;color:#9d9d9d;margin-top:9px}
+:root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;color-scheme:dark}*{box-sizing:border-box}
+body{margin:0;background:#0b0b0b;color:#fff;min-height:100vh}main{max-width:680px;margin:auto;padding:24px 18px 50px}
+h1{font-size:34px;margin:8px 0 4px}.tag{color:#1ed760;font-weight:800}.sub{color:#aaa;line-height:1.45;margin:0 0 24px}
+.card{background:#171717;border:1px solid #2b2b2b;border-radius:20px;padding:17px;margin:14px 0}.step{font-weight:800;font-size:19px;margin-bottom:8px}.note{color:#b8b8b8;line-height:1.45}
+a.btn{display:block;text-align:center;text-decoration:none;background:#1ed760;color:#07130b;font-weight:850;font-size:18px;padding:16px;border-radius:14px;margin-top:12px}
+a.secondary{background:#2b2b2b;color:#fff}.small{font-size:13px;color:#888;margin-top:24px;line-height:1.45}
 </style>
 </head>
-<body>
-<main>
-<h1>Spotify Mobile <small style="font-size:14px;color:#aaa">V1.2</small></h1>
-<p class="sub">Mobile shell using Spotify's native embedded playback controls.</p>
+<body><main>
+<h1>Spotify<span class="tag">Plus</span></h1>
+<p class="sub">V0.1 mobile skin for the real Spotify Web Player. Spotify still handles playback; SpotifyPlus only makes the interface easier to use on a phone.</p>
+
 <section class="card">
-<label for="spotifyUrl">Spotify playlist, album, artist or track link</label>
-<div class="row"><input id="spotifyUrl" inputmode="url" placeholder="Paste Spotify link"><button id="load">Load</button></div>
-<p class="note"><strong>Test:</strong> a public Spotify playlist should appear automatically below. Start playback using Spotify's own controls inside the player.</p>
+<div class="step">1. Use Firefox on Android</div>
+<div class="note">The first build uses a userscript manager because Firefox Android supports extensions. The skin itself is plain CSS/JavaScript and is not locked to Firefox.</div>
+<a class="btn secondary" href="https://www.mozilla.org/firefox/browsers/mobile/android/">Get Firefox for Android</a>
 </section>
-<section class="card"><div id="player"></div><div class="status" id="status">Loading test playlist…</div></section>
-<section class="card"><label>Saved shortcuts</label><div class="quick"><button data-slot="0">Favourite 1</button><button data-slot="1">Favourite 2</button><button data-slot="2">Favourite 3</button><button data-slot="3">Favourite 4</button></div><p class="note">Load a Spotify link, then tap a favourite button once to save it. Tap it again later to load it.</p></section>
-</main>
-<script>
-const input=document.querySelector('#spotifyUrl'),player=document.querySelector('#player'),status=document.querySelector('#status');let currentUrl='';
-const DEFAULT_URL='https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M';
-function parseSpotifyUrl(raw){try{const u=new URL(raw.trim());if(!/(^|\.)spotify\.com$/.test(u.hostname))return null;const parts=u.pathname.split('/').filter(Boolean),allowed=['playlist','album','artist','track','show','episode'];const i=parts.findIndex(x=>allowed.includes(x));if(i<0||!parts[i+1])return null;return{type:parts[i],id:parts[i+1]}}catch(e){return null}}
-function loadSpotify(raw){const parsed=parseSpotifyUrl(raw);if(!parsed){status.textContent='Paste a valid open.spotify.com link.';return}currentUrl=raw.trim();const src=`https://open.spotify.com/embed/${parsed.type}/${parsed.id}?utm_source=generator`;player.innerHTML='';const f=document.createElement('iframe');f.src=src;f.title='Spotify embedded player';f.allow='autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture';f.loading='eager';f.setAttribute('allowfullscreen','');player.appendChild(f);localStorage.setItem('spotify-mobile-last',currentUrl);input.value=currentUrl;status.textContent='Loaded. Use Spotify’s own controls inside the player to start playback.'}
-document.querySelector('#load').onclick=()=>loadSpotify(input.value);input.addEventListener('keydown',e=>{if(e.key==='Enter')loadSpotify(input.value)});
-document.querySelectorAll('[data-slot]').forEach(btn=>{const n=btn.dataset.slot,key='spotify-mobile-fav-'+n;if(localStorage.getItem(key))btn.textContent='Favourite '+(Number(n)+1)+' ✓';btn.onclick=()=>{const saved=localStorage.getItem(key);if(saved){loadSpotify(saved)}else if(currentUrl){localStorage.setItem(key,currentUrl);btn.textContent='Favourite '+(Number(n)+1)+' ✓';status.textContent='Shortcut saved.'}else{status.textContent='Load a Spotify link first, then tap this favourite.'}}});
-const last=localStorage.getItem('spotify-mobile-last');loadSpotify(last||DEFAULT_URL);
-</script>
-</body>
-</html>
+
+<section class="card">
+<div class="step">2. Install Violentmonkey</div>
+<div class="note">Violentmonkey injects the SpotifyPlus skin into the real <b>open.spotify.com</b> page.</div>
+<a class="btn secondary" href="https://addons.mozilla.org/en-CA/android/addon/violentmonkey/">Install Violentmonkey</a>
+</section>
+
+<section class="card">
+<div class="step">3. Install SpotifyPlus</div>
+<div class="note">Tap below in Firefox. Violentmonkey should open an install screen for the userscript.</div>
+<a class="btn" href="spotifyplus.user.js">Install SpotifyPlus V0.1</a>
+</section>
+
+<section class="card">
+<div class="step">4. Open Spotify Web</div>
+<div class="note">Sign in normally. If Spotify asks for desktop mode, enable it. You should see a small green <b>SP+</b> button near the upper-right. Tap it to turn the skin on or off.</div>
+<a class="btn secondary" href="https://open.spotify.com/">Open Spotify Web</a>
+</section>
+
+<p class="small">V0.1 intentionally changes only touch sizing: larger track rows, larger playback buttons, a larger search field and a taller playback bar. It does not bypass ads, skip limits, shuffle rules or any Spotify Free restrictions.</p>
+</main></body></html>
