@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         SpotifyPlus Mobile Skin
 // @namespace    https://github.com/formandfire/SpotifyPlus
-// @version      1.4.7
-// @description  Stable mobile skin with app-like SP+ Library, self-healing navigation, full-height panel, corrected bottom-nav active states, and clean playlist titles.
+// @version      1.4.8
+// @description  Stable mobile skin with app-like SP+ Library, self-healing navigation, full-height panel, corrected bottom-nav active states, clean playlist titles, and native previous/next controls.
 // @match        https://open.spotify.com/*
 // @run-at       document-idle
 // @grant        none
@@ -11,7 +11,7 @@
 // ==/UserScript==
 (() => {
 'use strict';
-const VERSION='1.4.7',ROOT='spotifyplus-mobile',STYLE='spotifyplus-style';
+const VERSION='1.4.8',ROOT='spotifyplus-mobile',STYLE='spotifyplus-style';
 const LIBKEY='spotifyplus-library-v1',PANEL='spotifyplus-library';
 const css=`
 html.${ROOT}{--sp-row:62px;--sp-radius:12px}
@@ -35,6 +35,7 @@ html.${ROOT} [data-testid*="premium" i]{opacity:.55!important;max-height:150px!i
 html.${ROOT} [data-testid="now-playing-bar"],html.${ROOT} .Root__now-playing-bar{min-height:104px!important;margin:0 10px 10px!important;border-radius:14px!important;overflow:hidden!important}
 html.${ROOT} footer{min-height:112px!important}
 html.${ROOT} [data-testid="control-button-playpause"]{width:64px!important;height:64px!important;min-width:64px!important;min-height:64px!important}
+html.${ROOT} [data-testid="control-button-skip-back"],html.${ROOT} [data-testid="control-button-skip-forward"]{display:flex!important;visibility:visible!important;opacity:1!important;width:48px!important;height:48px!important;min-width:48px!important;min-height:48px!important;align-items:center!important;justify-content:center!important;pointer-events:auto!important}
 html.${ROOT} [data-spplus-status-nav="1"],html.${ROOT} [data-spplus-status-nav="1"] *{color:#1ed760!important;fill:#1ed760!important;stroke:#1ed760!important}
 html.${ROOT} [data-spplus-status-nav="1"]{font-weight:800!important}
 html.${ROOT} [data-spplus-nav-active="1"],html.${ROOT} [data-spplus-nav-active="1"] *{color:#fff!important;fill:#fff!important;stroke:#fff!important;opacity:1!important}
