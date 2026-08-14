@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Spotify Mobile V1.1</title>
+<title>Spotify Mobile V1.2</title>
 <style>
 :root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;color-scheme:dark}
 *{box-sizing:border-box}
@@ -21,23 +21,24 @@ iframe{display:block;width:100%;border:0;border-radius:18px;min-height:352px}.qu
 </head>
 <body>
 <main>
-<h1>Spotify Mobile <small style="font-size:14px;color:#aaa">V1.1</small></h1>
+<h1>Spotify Mobile <small style="font-size:14px;color:#aaa">V1.2</small></h1>
 <p class="sub">Mobile shell using Spotify's native embedded playback controls.</p>
 <section class="card">
 <label for="spotifyUrl">Spotify playlist, album, artist or track link</label>
 <div class="row"><input id="spotifyUrl" inputmode="url" placeholder="Paste Spotify link"><button id="load">Load</button></div>
-<p class="note"><strong>Important:</strong> start/pause playback using Spotify's controls inside the player below. V1.1 deliberately does not call Spotify's iframe <code>play()</code> or <code>resume()</code> methods.</p>
+<p class="note"><strong>Test:</strong> a public Spotify playlist should appear automatically below. Start playback using Spotify's own controls inside the player.</p>
 </section>
-<section class="card"><div id="player"></div><div class="status" id="status">Ready.</div></section>
+<section class="card"><div id="player"></div><div class="status" id="status">Loading test playlist…</div></section>
 <section class="card"><label>Saved shortcuts</label><div class="quick"><button data-slot="0">Favourite 1</button><button data-slot="1">Favourite 2</button><button data-slot="2">Favourite 3</button><button data-slot="3">Favourite 4</button></div><p class="note">Load a Spotify link, then tap a favourite button once to save it. Tap it again later to load it.</p></section>
 </main>
 <script>
 const input=document.querySelector('#spotifyUrl'),player=document.querySelector('#player'),status=document.querySelector('#status');let currentUrl='';
+const DEFAULT_URL='https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M';
 function parseSpotifyUrl(raw){try{const u=new URL(raw.trim());if(!/(^|\.)spotify\.com$/.test(u.hostname))return null;const parts=u.pathname.split('/').filter(Boolean),allowed=['playlist','album','artist','track','show','episode'];const i=parts.findIndex(x=>allowed.includes(x));if(i<0||!parts[i+1])return null;return{type:parts[i],id:parts[i+1]}}catch(e){return null}}
 function loadSpotify(raw){const parsed=parseSpotifyUrl(raw);if(!parsed){status.textContent='Paste a valid open.spotify.com link.';return}currentUrl=raw.trim();const src=`https://open.spotify.com/embed/${parsed.type}/${parsed.id}?utm_source=generator`;player.innerHTML='';const f=document.createElement('iframe');f.src=src;f.title='Spotify embedded player';f.allow='autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture';f.loading='eager';f.setAttribute('allowfullscreen','');player.appendChild(f);localStorage.setItem('spotify-mobile-last',currentUrl);input.value=currentUrl;status.textContent='Loaded. Use Spotify’s own controls inside the player to start playback.'}
 document.querySelector('#load').onclick=()=>loadSpotify(input.value);input.addEventListener('keydown',e=>{if(e.key==='Enter')loadSpotify(input.value)});
 document.querySelectorAll('[data-slot]').forEach(btn=>{const n=btn.dataset.slot,key='spotify-mobile-fav-'+n;if(localStorage.getItem(key))btn.textContent='Favourite '+(Number(n)+1)+' ✓';btn.onclick=()=>{const saved=localStorage.getItem(key);if(saved){loadSpotify(saved)}else if(currentUrl){localStorage.setItem(key,currentUrl);btn.textContent='Favourite '+(Number(n)+1)+' ✓';status.textContent='Shortcut saved.'}else{status.textContent='Load a Spotify link first, then tap this favourite.'}}});
-const last=localStorage.getItem('spotify-mobile-last');if(last)loadSpotify(last);
+const last=localStorage.getItem('spotify-mobile-last');loadSpotify(last||DEFAULT_URL);
 </script>
 </body>
 </html>
