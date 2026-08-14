@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         SpotifyPlus Mobile Skin
 // @namespace    https://github.com/sstevestanislavski/SpotifyPlus
-// @version      1.4.5
-// @description  Stable mobile skin with app-like SP+ Library, self-healing navigation, full-height panel, and corrected bottom-nav active states.
+// @version      1.4.7
+// @description  Stable mobile skin with app-like SP+ Library, self-healing navigation, full-height panel, corrected bottom-nav active states, and clean playlist titles.
 // @match        https://open.spotify.com/*
 // @run-at       document-idle
 // @grant        none
@@ -11,7 +11,7 @@
 // ==/UserScript==
 (() => {
 'use strict';
-const VERSION='1.4.5',ROOT='spotifyplus-mobile',STYLE='spotifyplus-style';
+const VERSION='1.4.7',ROOT='spotifyplus-mobile',STYLE='spotifyplus-style';
 const LIBKEY='spotifyplus-library-v1',PANEL='spotifyplus-library';
 const css=`
 html.${ROOT}{--sp-row:62px;--sp-radius:12px}
@@ -71,7 +71,7 @@ html.${ROOT} [data-spplus-nav-inactive="1"],html.${ROOT} [data-spplus-nav-inacti
 function readLib(){try{return JSON.parse(localStorage.getItem(LIBKEY)||'[]')}catch{return[]}}
 function writeLib(v){localStorage.setItem(LIBKEY,JSON.stringify(v))}
 function parseSpotify(raw){try{const u=new URL(raw,location.href);if(!/(^|\.)spotify\.com$/i.test(u.hostname))return null;const p=u.pathname.split('/').filter(Boolean),types=['playlist','artist','album','track','show','episode'];const i=p.findIndex(x=>types.includes(x));if(i<0||!p[i+1])return null;return{url:`https://open.spotify.com/${p[i]}/${p[i+1]}`,type:p[i],id:p[i+1]}}catch{return null}}
-function cleanTitle(){let t=(document.title||'').replace(/\s*[|–-]\s*Spotify\s*$/i,'').trim();return t||'Saved Spotify item'}
+function cleanTitle(){let t=(document.title||'').replace(/\s*[|–-]\s*Spotify\s*$/i,'').trim();t=t.replace(/\s*[-–—]?\s*playlist by .+$/i,'').trim();return t||'Saved Spotify item'}
 function saveLink(raw,title){const p=parseSpotify(raw);if(!p)return false;let lib=readLib();const e=lib.find(x=>x.url===p.url);if(e){e.title=title||e.title;e.savedAt=Date.now()}else lib.unshift({...p,title:title||'Saved Spotify item',savedAt:Date.now()});writeLib(lib);renderLibrary();return true}
 let filter='all',query='';
 function ensureLibrary(){if(document.getElementById(PANEL)||!document.body)return;const el=document.createElement('div');el.id=PANEL;el.innerHTML=`<div class="spl-wrap"><div class="spl-head"><div class="spl-avatar">SP</div><h1>Your Library</h1><button class="spl-iconbtn" id="spl-search-btn" aria-label="Search library">⌕</button><button class="spl-iconbtn" id="spl-add-btn" aria-label="Add to library">＋</button><button class="spl-manage" id="spl-manage">Manage</button></div><div class="spl-search" id="spl-search"><input id="spl-search-input" placeholder="Search your SP+ Library"></div><div class="spl-chips" id="spl-chips"></div><div class="spl-sort"><span>↕</span><span>Recents</span></div><div class="spl-list" id="spl-list"></div><div class="spl-note">SP+ Library is saved locally in this browser. It does not sync with Spotify's account library.</div></div>`;document.body.appendChild(el);el.querySelector('#spl-search-btn').onclick=()=>{const box=el.querySelector('#spl-search');box.classList.toggle('open');if(box.classList.contains('open'))el.querySelector('#spl-search-input').focus()};el.querySelector('#spl-search-input').oninput=e=>{query=e.target.value.toLowerCase();renderLibrary()};el.querySelector('#spl-add-btn').onclick=()=>{const current=parseSpotify(location.href);const suggestion=current?location.href:'';const raw=prompt('Paste a Spotify link, or leave the current Spotify page URL:',suggestion);if(raw===null)return;if(!saveLink(raw,raw===location.href?cleanTitle():'Saved Spotify item'))alert('Open or paste a valid Spotify playlist, artist, album, track, show, or episode link.');};el.querySelector('#spl-manage').onclick=()=>{if(!readLib().length)return;if(confirm('Manage SP+ Library: remove all saved items?')){writeLib([]);renderLibrary()}};renderLibrary()}
