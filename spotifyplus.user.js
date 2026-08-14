@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SpotifyPlus Mobile Skin
 // @namespace    https://github.com/sstevestanislavski/SpotifyPlus
-// @version      0.1.0
+// @version      0.2.0
 // @description  Phone-friendly skin for Spotify Web. Changes layout only; Spotify handles playback.
 // @match        https://open.spotify.com/*
 // @run-at       document-idle
@@ -19,9 +19,14 @@
 
   const css = `
   html.${ROOT_CLASS} {
-    --sp-touch: 52px;
-    --sp-row: 58px;
+    --sp-touch: 54px;
+    --sp-row: 64px;
     --sp-radius: 12px;
+  }
+
+  html.${ROOT_CLASS}, html.${ROOT_CLASS} body {
+    overflow-x: hidden !important;
+    max-width: 100vw !important;
   }
 
   html.${ROOT_CLASS} body {
@@ -29,38 +34,70 @@
     -webkit-tap-highlight-color: transparent;
   }
 
-  /* Reliable Spotify test-id targets first; broad fallbacks second. */
+  /* V0.2: turn Spotify's desktop 3-column shell into a phone-friendly 2-column shell. */
+  html.${ROOT_CLASS} .Root__top-container {
+    grid-template-columns: 64px minmax(0, 1fr) 0px !important;
+    column-gap: 6px !important;
+  }
+
+  /* Hide the right-side artist/queue panel completely. */
+  html.${ROOT_CLASS} .Root__right-sidebar,
+  html.${ROOT_CLASS} [data-testid="right-sidebar"],
+  html.${ROOT_CLASS} aside[aria-label*="Now playing" i],
+  html.${ROOT_CLASS} aside[aria-label*="Queue" i] {
+    display: none !important;
+    width: 0 !important;
+    min-width: 0 !important;
+  }
+
+  /* Keep only a narrow icon rail on the left. */
+  html.${ROOT_CLASS} .Root__nav-bar,
+  html.${ROOT_CLASS} [data-testid="left-sidebar"] {
+    width: 64px !important;
+    min-width: 64px !important;
+    max-width: 64px !important;
+    overflow: hidden !important;
+  }
+
+  /* Main view gets almost the whole screen. */
+  html.${ROOT_CLASS} .Root__main-view,
+  html.${ROOT_CLASS} [data-testid="main-view"] {
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+  }
+
+  /* Remove desktop side padding that wastes precious phone width. */
+  html.${ROOT_CLASS} main [data-testid="playlist-page"],
+  html.${ROOT_CLASS} main [data-testid="artist-page"],
+  html.${ROOT_CLASS} main [data-testid="album-page"],
+  html.${ROOT_CLASS} .contentSpacing {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  /* Track list: bigger rows/text/tap areas. */
   html.${ROOT_CLASS} [data-testid="tracklist-row"] {
     min-height: var(--sp-row) !important;
     border-radius: var(--sp-radius) !important;
+    font-size: 16px !important;
   }
 
   html.${ROOT_CLASS} [data-testid="tracklist-row"] a,
   html.${ROOT_CLASS} [data-testid="tracklist-row"] button {
-    min-height: 44px !important;
+    min-height: 46px !important;
   }
 
-  html.${ROOT_CLASS} [data-testid="control-button-playpause"] {
-    width: 58px !important;
-    height: 58px !important;
-    min-width: 58px !important;
-    min-height: 58px !important;
-  }
+  /* Make headings and common metadata readable without pinch-zooming. */
+  html.${ROOT_CLASS} main h1 { font-size: clamp(34px, 6vw, 58px) !important; }
+  html.${ROOT_CLASS} main h2 { font-size: 24px !important; }
+  html.${ROOT_CLASS} main p,
+  html.${ROOT_CLASS} main span,
+  html.${ROOT_CLASS} main a { line-height: 1.35; }
 
-  html.${ROOT_CLASS} [data-testid="control-button-skip-back"],
-  html.${ROOT_CLASS} [data-testid="control-button-skip-forward"] {
-    width: 48px !important;
-    height: 48px !important;
-    min-width: 48px !important;
-    min-height: 48px !important;
-  }
-
-  html.${ROOT_CLASS} [data-testid="now-playing-widget"] {
-    min-width: 220px !important;
-  }
-
+  /* Search and top navigation. */
   html.${ROOT_CLASS} [data-testid="search-input"] {
-    min-height: 50px !important;
+    min-height: 52px !important;
     font-size: 18px !important;
     border-radius: 14px !important;
   }
@@ -70,43 +107,49 @@
     touch-action: manipulation;
   }
 
-  /* Spotify's bottom player: make the whole zone easier to hit on a phone. */
+  /* Bottom player becomes a large phone control zone. */
   html.${ROOT_CLASS} [data-testid="now-playing-bar"],
+  html.${ROOT_CLASS} .Root__now-playing-bar,
   html.${ROOT_CLASS} footer {
-    min-height: 104px !important;
+    min-height: 112px !important;
   }
 
-  /* Larger common icon buttons without blowing up compact menu controls. */
-  html.${ROOT_CLASS} button[aria-label*="Play" i],
-  html.${ROOT_CLASS} button[aria-label*="Pause" i],
+  html.${ROOT_CLASS} [data-testid="control-button-playpause"] {
+    width: 64px !important;
+    height: 64px !important;
+    min-width: 64px !important;
+    min-height: 64px !important;
+  }
+
+  html.${ROOT_CLASS} [data-testid="control-button-skip-back"],
+  html.${ROOT_CLASS} [data-testid="control-button-skip-forward"],
   html.${ROOT_CLASS} button[aria-label*="Next" i],
-  html.${ROOT_CLASS} button[aria-label*="Previous" i],
-  html.${ROOT_CLASS} button[aria-label*="Skip" i] {
-    min-width: 48px !important;
-    min-height: 48px !important;
+  html.${ROOT_CLASS} button[aria-label*="Previous" i] {
+    width: 50px !important;
+    height: 50px !important;
+    min-width: 50px !important;
+    min-height: 50px !important;
   }
 
-  /* Give desktop-mode Spotify a little more breathing room for touch. */
-  html.${ROOT_CLASS} main a,
-  html.${ROOT_CLASS} main button {
-    scroll-margin: 110px;
+  html.${ROOT_CLASS} [data-testid="now-playing-widget"] {
+    min-width: 180px !important;
   }
 
   /* SpotifyPlus toggle */
   #spotifyplus-toggle {
     position: fixed;
-    right: 10px;
-    top: 76px;
+    right: 12px;
+    top: 78px;
     z-index: 2147483647;
-    width: 48px;
-    height: 48px;
+    width: 50px;
+    height: 50px;
     border: 0;
-    border-radius: 24px;
+    border-radius: 25px;
     background: #1ed760;
     color: #07130b;
     font: 800 13px/1 system-ui, sans-serif;
     box-shadow: 0 5px 18px rgba(0,0,0,.42);
-    opacity: .92;
+    opacity: .94;
   }
 
   #spotifyplus-toggle[data-off="true"] {
@@ -153,7 +196,6 @@
   apply(enabled());
   ensureToggle();
 
-  // Spotify is a single-page app and rebuilds parts of the DOM frequently.
   const observer = new MutationObserver(() => ensureToggle());
   observer.observe(document.documentElement, { childList: true, subtree: true });
 })();
