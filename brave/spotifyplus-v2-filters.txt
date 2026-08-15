@@ -1,4 +1,4 @@
-! SpotifyPlus v2.0 — Brave Android filter build
+! SpotifyPlus v2.0.1 — Brave Android filter build
 ! Target: https://open.spotify.com/
 ! Purpose: keep Spotify as the native web player while simplifying the interface in Brave.
 ! No API, no Tampermonkey, no injected JavaScript.
@@ -31,3 +31,10 @@ open.spotify.com##.Root__now-playing-bar:style(min-height:104px !important;margi
 
 ! --- Give page content room above the player ---
 open.spotify.com##main:style(padding-bottom:170px !important)
+
+! --- SP+ status indicator ---
+! Reuse Spotify's Get App navigation item as a passive green build indicator.
+open.spotify.com##a:has-text(/^Get App$/):style(color:#1ed760 !important;font-weight:800 !important;font-size:0 !important)
+open.spotify.com##a:has-text(/^Get App$/)::after:style(content:"SP+ v2.0.1" !important;font-size:12px !important;color:#1ed760 !important;font-weight:800 !important;white-space:nowrap !important)
+open.spotify.com##button:has-text(/^Get App$/):style(color:#1ed760 !important;font-weight:800 !important;font-size:0 !important)
+open.spotify.com##button:has-text(/^Get App$/)::after:style(content:"SP+ v2.0.1" !important;font-size:12px !important;color:#1ed760 !important;font-weight:800 !important;white-space:nowrap !important)
