@@ -1,4 +1,4 @@
-! SpotifyPlus v2.0.3 — Brave Android filter build
+! SpotifyPlus v2.0.4 — Brave Android filter build
 ! Target: https://open.spotify.com/
 ! Purpose: keep Spotify as the native web player while simplifying the interface in Brave.
 ! No API, no Tampermonkey, no injected JavaScript.
@@ -32,10 +32,9 @@ open.spotify.com##.Root__now-playing-bar:style(min-height:104px !important;margi
 ! --- Give page content room above the player ---
 open.spotify.com##main:style(padding-bottom:170px !important)
 
-! --- SP+ v2.0.3 passive status indicator ---
-! Brave reliably styles the existing Get App nav item but does not reliably replace its text.
-! Keep the native item shape/size, and use Spotify green as the visual confirmation that SP+ filters are active.
-open.spotify.com##a:has-text(/^Get App$/):style(background:transparent !important;color:#1ed760 !important;font-weight:800 !important;box-shadow:inset 0 -2px 0 #1ed760 !important;border-radius:0 !important)
-open.spotify.com##a:has-text(/^Get App$/) *:style(color:#1ed760 !important;fill:#1ed760 !important;stroke:#1ed760 !important)
-open.spotify.com##button:has-text(/^Get App$/):style(background:transparent !important;color:#1ed760 !important;font-weight:800 !important;box-shadow:inset 0 -2px 0 #1ed760 !important;border-radius:0 !important)
-open.spotify.com##button:has-text(/^Get App$/) *:style(color:#1ed760 !important;fill:#1ed760 !important;stroke:#1ed760 !important)
+! --- SP+ v2.0.4 passive status indicator ---
+! Keep the native Get App item visible as the SP+ status indicator, but disable its link/action.
+open.spotify.com##a:has-text(/^Get App$/):style(background:transparent !important;color:#1ed760 !important;font-weight:800 !important;box-shadow:inset 0 -2px 0 #1ed760 !important;border-radius:0 !important;pointer-events:none !important;cursor:default !important)
+open.spotify.com##a:has-text(/^Get App$/) *:style(color:#1ed760 !important;fill:#1ed760 !important;stroke:#1ed760 !important;pointer-events:none !important)
+open.spotify.com##button:has-text(/^Get App$/):style(background:transparent !important;color:#1ed760 !important;font-weight:800 !important;box-shadow:inset 0 -2px 0 #1ed760 !important;border-radius:0 !important;pointer-events:none !important;cursor:default !important)
+open.spotify.com##button:has-text(/^Get App$/) *:style(color:#1ed760 !important;fill:#1ed760 !important;stroke:#1ed760 !important;pointer-events:none !important)
