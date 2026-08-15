@@ -1,0 +1,33 @@
+! SpotifyPlus v2.0 — Brave Android filter build
+! Target: https://open.spotify.com/
+! Purpose: keep Spotify as the native web player while simplifying the interface in Brave.
+! No API, no Tampermonkey, no injected JavaScript.
+! Updated: 2026-08-14
+
+! --- Remove Premium promotion surfaces ---
+open.spotify.com##a[href*="/premium"]
+open.spotify.com##button[aria-label*="premium" i]
+open.spotify.com##[data-testid*="premium" i]
+
+! --- Remove desktop sidebars / extra panes ---
+open.spotify.com##[data-testid="right-sidebar"]
+open.spotify.com##aside[aria-label*="Now playing" i]
+open.spotify.com##aside[aria-label*="Queue" i]
+open.spotify.com##[data-testid="left-sidebar"]
+
+! --- Make the main Spotify content use the available phone width ---
+open.spotify.com##.Root__main-view:style(width:100% !important;min-width:0 !important;max-width:none !important)
+open.spotify.com##[data-testid="main-view"]:style(width:100% !important;min-width:0 !important;max-width:none !important)
+open.spotify.com##.contentSpacing:style(padding-left:16px !important;padding-right:16px !important)
+
+! --- Touch-friendly sizing ---
+open.spotify.com##[data-testid="tracklist-row"]:style(min-height:62px !important;border-radius:12px !important;font-size:16px !important)
+open.spotify.com##[data-testid="search-input"]:style(min-height:52px !important;font-size:18px !important;border-radius:14px !important)
+open.spotify.com##[data-testid="control-button-playpause"]:style(width:64px !important;height:64px !important;min-width:64px !important;min-height:64px !important)
+
+! --- Now Playing bar ---
+open.spotify.com##[data-testid="now-playing-bar"]:style(min-height:104px !important;margin:0 10px 10px !important;border-radius:14px !important;overflow:hidden !important)
+open.spotify.com##.Root__now-playing-bar:style(min-height:104px !important;margin:0 10px 10px !important;border-radius:14px !important;overflow:hidden !important)
+
+! --- Give page content room above the player ---
+open.spotify.com##main:style(padding-bottom:170px !important)
