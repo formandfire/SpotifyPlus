@@ -1,4 +1,4 @@
-! SpotifyPlus v2.0.5 — Brave Android filter build
+! SpotifyPlus v2.0.6 — Brave Android filter build
 ! Target: https://open.spotify.com/
 ! Purpose: keep Spotify as the native web player while simplifying the interface in Brave.
 ! No API, no Tampermonkey, no injected JavaScript.
@@ -32,23 +32,18 @@ open.spotify.com##.Root__now-playing-bar:style(min-height:104px !important;margi
 ! --- Give page content room above the player ---
 open.spotify.com##main:style(padding-bottom:170px !important)
 
-! --- SP+ v2.0.5 passive status indicator ---
+! --- SP+ v2.0.6 passive status indicator ---
 ! Keep the native Get App item visible as the SP+ status indicator, but disable its link/action.
 open.spotify.com##a:has-text(/^Get App$/):style(background:transparent !important;color:#1ed760 !important;font-weight:800 !important;box-shadow:inset 0 -2px 0 #1ed760 !important;border-radius:0 !important;pointer-events:none !important;cursor:default !important)
 open.spotify.com##a:has-text(/^Get App$/) *:style(color:#1ed760 !important;fill:#1ed760 !important;stroke:#1ed760 !important;pointer-events:none !important)
 open.spotify.com##button:has-text(/^Get App$/):style(background:transparent !important;color:#1ed760 !important;font-weight:800 !important;box-shadow:inset 0 -2px 0 #1ed760 !important;border-radius:0 !important;pointer-events:none !important;cursor:default !important)
 open.spotify.com##button:has-text(/^Get App$/) *:style(color:#1ed760 !important;fill:#1ed760 !important;stroke:#1ed760 !important;pointer-events:none !important)
 
-! --- Profile → SP+ Library mode (user/profile pages only) ---
-! :matches-path keeps these rules off Home, Search, artists, albums and playlists.
-! De-emphasize profile identity/count so the playlist list becomes the focus.
-open.spotify.com##:matches-path(/^\/user\//) h1:style(font-size:18px !important;line-height:1.15 !important;opacity:.55 !important;margin:4px 0 !important)
-open.spotify.com##:matches-path(/^\/user\//) *:has-text(/^\d+ public playlists$/):style(font-size:12px !important;opacity:.45 !important;margin:0 !important)
-
-! Make the Public Playlists heading read like the Library section title.
-open.spotify.com##:matches-path(/^\/user\//) h2:has-text(/^Public Playlists$/):style(font-size:28px !important;line-height:1.1 !important;margin:12px 0 10px !important;font-weight:800 !important)
-open.spotify.com##:matches-path(/^\/user\//) *:has-text(/^Public Playlists$/):style(letter-spacing:-.2px !important)
-
-! Tighten and enlarge native playlist rows for phone use while leaving Spotify's links intact.
-open.spotify.com##:matches-path(/^\/user\//) a[href*="/playlist/"]:style(min-height:72px !important;margin:0 !important;padding-top:5px !important;padding-bottom:5px !important;border-radius:10px !important)
-open.spotify.com##:matches-path(/^\/user\//) a[href*="/playlist/"] img:style(width:64px !important;height:64px !important;min-width:64px !important;border-radius:5px !important;object-fit:cover !important)
+! --- Profile → SP+ Library mode, compatibility fallback ---
+! v2.0.5 used :matches-path(); Brave Android did not apply those rules.
+! These selectors instead key off profile-only text and playlist links already present in Spotify's DOM.
+open.spotify.com##h2:has-text(/^Public Playlists$/):style(font-size:30px !important;line-height:1.1 !important;margin:10px 0 12px !important;font-weight:850 !important)
+open.spotify.com##*:has-text(/^\d+ public playlists$/):style(font-size:12px !important;opacity:.45 !important;margin:0 !important)
+open.spotify.com##h1:has(+ *:has-text(/^\d+ public playlists$/)):style(font-size:18px !important;line-height:1.1 !important;opacity:.5 !important;margin:0 !important)
+open.spotify.com##a[href*="/playlist/"]:style(min-height:72px !important;margin:0 !important;padding-top:4px !important;padding-bottom:4px !important;border-radius:10px !important)
+open.spotify.com##a[href*="/playlist/"] img:style(width:64px !important;height:64px !important;min-width:64px !important;border-radius:5px !important;object-fit:cover !important)
