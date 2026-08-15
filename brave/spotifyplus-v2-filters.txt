@@ -1,4 +1,4 @@
-! SpotifyPlus v2.0.8 — Brave Android filter build
+! SpotifyPlus v2.0.9 — Brave Android filter build
 ! Target: https://open.spotify.com/
 ! Purpose: keep Spotify as the native web player while simplifying the interface in Brave.
 ! No API, no Tampermonkey, no injected JavaScript.
@@ -32,7 +32,7 @@ open.spotify.com##.Root__now-playing-bar:style(min-height:104px !important;margi
 ! --- Give page content room above the player ---
 open.spotify.com##main:style(padding-bottom:170px !important)
 
-! --- SP+ v2.0.8 passive status indicator ---
+! --- SP+ v2.0.9 passive status indicator ---
 ! Keep the native Get App item visible as the SP+ status indicator, but disable its link/action.
 open.spotify.com##a:has-text(/^Get App$/):style(background:transparent !important;color:#1ed760 !important;font-weight:800 !important;box-shadow:inset 0 -2px 0 #1ed760 !important;border-radius:0 !important;pointer-events:none !important;cursor:default !important)
 open.spotify.com##a:has-text(/^Get App$/) *:style(color:#1ed760 !important;fill:#1ed760 !important;stroke:#1ed760 !important;pointer-events:none !important)
@@ -49,15 +49,13 @@ open.spotify.com##.e-10750-text.encore-text-title-medium.mbNIy3B9g1lTNZxilD3l
 open.spotify.com##.e-10750-text.encore-text-body-small.OXs_QyZHJY9LrduaQHrg.RWUOjJuwcJoMK2943cfD > .e-10750-text.encore-text-body-small
 
 ! --- Refine native Public Playlists into an SP+ Library list ---
-! Heading selector discovered with Brave's picker; style it like a proper Library header instead of blocking it.
 open.spotify.com##.e-10750-text.encore-text-body-medium-bold.JPdnJlRAb7gD1ZL7u5fS:style(font-size:28px !important;line-height:1.1 !important;font-weight:800 !important;margin:4px 0 14px !important;letter-spacing:-.3px !important)
 
-! Playlist row class discovered from the first native playlist row. Apply the same tighter spacing to all playlist rows.
-open.spotify.com##a.cFrM4w498o8wLc_DyGjL:style(min-height:68px !important;margin:0 !important;padding-top:3px !important;padding-bottom:3px !important;border-radius:8px !important)
+! Playlist row class discovered with Brave's picker. v2.0.9 reduces the native row box itself so the 56px artwork does not leave large vertical gaps.
+open.spotify.com##a.cFrM4w498o8wLc_DyGjL:style(height:64px !important;min-height:64px !important;max-height:64px !important;margin:0 !important;padding-top:2px !important;padding-bottom:2px !important;border-radius:8px !important)
+open.spotify.com##a.cFrM4w498o8wLc_DyGjL + a.cFrM4w498o8wLc_DyGjL:style(margin-top:2px !important)
 
-! Artwork wrapper discovered from the first playlist row; make covers slightly smaller so more rows fit on screen.
+! Keep the v2.0.8 artwork and title sizing.
 open.spotify.com##.FwkSRC8nZx0oFeY2HJi2.VcFDIGhfgBiM9zjbZ5Gb.xMLEqLC2MvHjIHuD0xxf:style(width:56px !important;height:56px !important;min-width:56px !important;flex-basis:56px !important;border-radius:5px !important;overflow:hidden !important)
 open.spotify.com##.FwkSRC8nZx0oFeY2HJi2.VcFDIGhfgBiM9zjbZ5Gb.xMLEqLC2MvHjIHuD0xxf img:style(width:56px !important;height:56px !important;object-fit:cover !important)
-
-! Playlist-title text selector discovered from the first row; keep titles readable while tightening the list.
 open.spotify.com##.e-10750-text.encore-text-body-medium.xfyQl1X9R719VQofTZH8:style(font-size:17px !important;line-height:1.2 !important)
