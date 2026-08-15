@@ -1,4 +1,4 @@
-! SpotifyPlus v2.0.1 — Brave Android filter build
+! SpotifyPlus v2.0.2 — Brave Android filter build
 ! Target: https://open.spotify.com/
 ! Purpose: keep Spotify as the native web player while simplifying the interface in Brave.
 ! No API, no Tampermonkey, no injected JavaScript.
@@ -32,9 +32,13 @@ open.spotify.com##.Root__now-playing-bar:style(min-height:104px !important;margi
 ! --- Give page content room above the player ---
 open.spotify.com##main:style(padding-bottom:170px !important)
 
-! --- SP+ status indicator ---
-! Reuse Spotify's Get App navigation item as a passive green build indicator.
-open.spotify.com##a:has-text(/^Get App$/):style(color:#1ed760 !important;font-weight:800 !important;font-size:0 !important)
-open.spotify.com##a:has-text(/^Get App$/)::after:style(content:"SP+ v2.0.1" !important;font-size:12px !important;color:#1ed760 !important;font-weight:800 !important;white-space:nowrap !important)
-open.spotify.com##button:has-text(/^Get App$/):style(color:#1ed760 !important;font-weight:800 !important;font-size:0 !important)
-open.spotify.com##button:has-text(/^Get App$/)::after:style(content:"SP+ v2.0.1" !important;font-size:12px !important;color:#1ed760 !important;font-weight:800 !important;white-space:nowrap !important)
+! --- SP+ v2.0.2 status badge experiment ---
+! First style the full Get App link/button container as a green pill.
+open.spotify.com##a:has-text(/^Get App$/):style(background:#1ed760 !important;color:#000 !important;border-radius:999px !important;padding:7px 11px !important;font-weight:800 !important;line-height:1 !important;min-width:72px !important;text-align:center !important)
+open.spotify.com##button:has-text(/^Get App$/):style(background:#1ed760 !important;color:#000 !important;border-radius:999px !important;padding:7px 11px !important;font-weight:800 !important;line-height:1 !important;min-width:72px !important;text-align:center !important)
+
+! Then test pseudo-element text replacement. If Brave supports this, Get App should disappear and SP+ v2.0.2 should appear inside the green pill.
+open.spotify.com##a:has-text(/^Get App$/):style(font-size:0 !important)
+open.spotify.com##a:has-text(/^Get App$/)::before:style(content:"SP+ v2.0.2" !important;display:inline-block !important;font-size:12px !important;color:#000 !important;font-weight:800 !important;white-space:nowrap !important)
+open.spotify.com##button:has-text(/^Get App$/):style(font-size:0 !important)
+open.spotify.com##button:has-text(/^Get App$/)::before:style(content:"SP+ v2.0.2" !important;display:inline-block !important;font-size:12px !important;color:#000 !important;font-weight:800 !important;white-space:nowrap !important)
