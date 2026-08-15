@@ -1,0 +1,60 @@
+! SpotifyPlus v2.0.11 — Brave Android filter build
+! Stable baseline locked 2026-08-14
+! Target: https://open.spotify.com/
+! Purpose: keep Spotify as the native web player while simplifying the interface in Brave.
+! No API, no Tampermonkey, no injected JavaScript.
+
+! --- Remove Premium promotion surfaces ---
+open.spotify.com##a[href*="/premium"]
+open.spotify.com##button[aria-label*="premium" i]
+open.spotify.com##[data-testid*="premium" i]
+
+! --- Remove desktop sidebars / extra panes ---
+open.spotify.com##[data-testid="right-sidebar"]
+open.spotify.com##aside[aria-label*="Now playing" i]
+open.spotify.com##aside[aria-label*="Queue" i]
+open.spotify.com##[data-testid="left-sidebar"]
+
+! --- Make the main Spotify content use the available phone width ---
+open.spotify.com##.Root__main-view:style(width:100% !important;min-width:0 !important;max-width:none !important)
+open.spotify.com##[data-testid="main-view"]:style(width:100% !important;min-width:0 !important;max-width:none !important)
+open.spotify.com##.contentSpacing:style(padding-left:16px !important;padding-right:16px !important)
+
+! --- Touch-friendly sizing ---
+open.spotify.com##[data-testid="tracklist-row"]:style(min-height:62px !important;border-radius:12px !important;font-size:16px !important)
+open.spotify.com##[data-testid="search-input"]:style(min-height:52px !important;font-size:18px !important;border-radius:14px !important)
+open.spotify.com##[data-testid="control-button-playpause"]:style(width:64px !important;height:64px !important;min-width:64px !important;min-height:64px !important)
+
+! --- Now Playing bar ---
+open.spotify.com##[data-testid="now-playing-bar"]:style(min-height:104px !important;margin:0 10px 10px !important;border-radius:14px !important;overflow:hidden !important)
+open.spotify.com##.Root__now-playing-bar:style(min-height:104px !important;margin:0 10px 10px !important;border-radius:14px !important;overflow:hidden !important)
+
+! --- Give page content room above the player ---
+open.spotify.com##main:style(padding-bottom:170px !important)
+
+! --- SP+ v2.0.11 passive status indicator ---
+open.spotify.com##a:has-text(/^Get App$/):style(background:transparent !important;color:#1ed760 !important;font-weight:800 !important;box-shadow:inset 0 -2px 0 #1ed760 !important;border-radius:0 !important;pointer-events:none !important;cursor:default !important)
+open.spotify.com##a:has-text(/^Get App$/) *:style(color:#1ed760 !important;fill:#1ed760 !important;stroke:#1ed760 !important;pointer-events:none !important)
+open.spotify.com##button:has-text(/^Get App$/):style(background:transparent !important;color:#1ed760 !important;font-weight:800 !important;box-shadow:inset 0 -2px 0 #1ed760 !important;border-radius:0 !important;pointer-events:none !important;cursor:default !important)
+open.spotify.com##button:has-text(/^Get App$/) *:style(color:#1ed760 !important;fill:#1ed760 !important;stroke:#1ed760 !important;pointer-events:none !important)
+
+! --- Profile → SP+ Library mode ---
+open.spotify.com##.QLp_FMuyk65IDSVN0Ar6
+open.spotify.com##.e-10750-text.encore-text-title-medium.mbNIy3B9g1lTNZxilD3l
+open.spotify.com##.e-10750-text.encore-text-body-small.OXs_QyZHJY9LrduaQHrg.RWUOjJuwcJoMK2943cfD > .e-10750-text.encore-text-body-small
+
+! --- Refine native Public Playlists into an SP+ Library list ---
+open.spotify.com##.e-10750-text.encore-text-body-medium-bold.JPdnJlRAb7gD1ZL7u5fS:style(font-size:28px !important;line-height:1.1 !important;font-weight:800 !important;margin:4px 0 14px !important;letter-spacing:-.3px !important)
+open.spotify.com##a.cFrM4w498o8wLc_DyGjL:style(height:64px !important;min-height:64px !important;max-height:64px !important;margin:0 !important;padding-top:2px !important;padding-bottom:2px !important;border-radius:8px !important)
+open.spotify.com##*:has(> a.cFrM4w498o8wLc_DyGjL):style(gap:4px !important;row-gap:4px !important)
+open.spotify.com##.FwkSRC8nZx0oFeY2HJi2.VcFDIGhfgBiM9zjbZ5Gb.xMLEqLC2MvHjIHuD0xxf:style(width:56px !important;height:56px !important;min-width:56px !important;flex-basis:56px !important;border-radius:5px !important;overflow:hidden !important)
+open.spotify.com##.FwkSRC8nZx0oFeY2HJi2.VcFDIGhfgBiM9zjbZ5Gb.xMLEqLC2MvHjIHuD0xxf img:style(width:56px !important;height:56px !important;object-fit:cover !important)
+open.spotify.com##.e-10750-text.encore-text-body-medium.xfyQl1X9R719VQofTZH8:style(font-size:17px !important;line-height:1.2 !important)
+
+! --- Library tab active state on Profile/Public Playlists page ---
+open.spotify.com##body:has(.e-10750-text.encore-text-body-medium-bold.JPdnJlRAb7gD1ZL7u5fS) a:has-text(/^Your Library$/):style(color:#1ed760 !important;font-weight:700 !important;box-shadow:inset 0 -2px 0 #1ed760 !important)
+open.spotify.com##body:has(.e-10750-text.encore-text-body-medium-bold.JPdnJlRAb7gD1ZL7u5fS) a:has-text(/^Your Library$/) *:style(color:#1ed760 !important;fill:#1ed760 !important;stroke:#1ed760 !important)
+open.spotify.com##body:has(.e-10750-text.encore-text-body-medium-bold.JPdnJlRAb7gD1ZL7u5fS) a:has-text(/^Home$/):style(color:#b3b3b3 !important;box-shadow:none !important)
+open.spotify.com##body:has(.e-10750-text.encore-text-body-medium-bold.JPdnJlRAb7gD1ZL7u5fS) a:has-text(/^Home$/) *:style(color:#b3b3b3 !important;fill:#b3b3b3 !important;stroke:#b3b3b3 !important)
+open.spotify.com##body:has(.e-10750-text.encore-text-body-medium-bold.JPdnJlRAb7gD1ZL7u5fS) a:has-text(/^Search$/):style(color:#b3b3b3 !important;box-shadow:none !important)
+open.spotify.com##body:has(.e-10750-text.encore-text-body-medium-bold.JPdnJlRAb7gD1ZL7u5fS) a:has-text(/^Search$/) *:style(color:#b3b3b3 !important;fill:#b3b3b3 !important;stroke:#b3b3b3 !important)
